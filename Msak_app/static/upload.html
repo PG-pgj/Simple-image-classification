@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>上传图片</title>
+    <link rel="stylesheet" href="../static/lib/element.css">
+    <style>
+        #app{
+            padding: 0 300px;
+        }
+        .title{
+            display: flex;
+            padding: 10px 0 0;
+        }
+        .img-box{
+            flex: 2;
+        }
+        .img-tag{
+            flex: 2;
+        }
+        img{
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="inputs">
+            <input type="file" style="display: none" ref="input" @change="fileChang">
+            <el-button @click="handClick">上传图片</el-button>
+        </div>
+        <div class="title">
+            <div class="img-box">
+                <img :src="img" v-show="img.length>0">
+            </div>
+            <div class="img-tag" v-for="(file,index) in reData">
+                <h1>图片名称: {{file.filename}}</h1>
+                <h3>类别: {{file.classname}}</h3>
+                <h3>概率: {{file.predict}}</h3>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="../static/lib/vue.min.js"></script>
+<script src="../static/lib/axios.min.js"></script>
+<script src="../static/lib/element.js"></script>
+<script>
+    var mv = new Vue({
+        el:'#app',
+        data:{
+            reData : '',
+            file : '',
+            img : '',
+        },
+        methods:{
+            handClick(){
+                this.$refs['input'].click();
+            },
+            fileChang(e){
+                this.file = e.target.files[0];
+                let reder = new FileReader();
+                reder.readAsDataURL(this.file)
+                reder.onloadend=()=>{
+                    this.img = reder.result;
+                }
+
+                this.upload();
+            },
+            upload(){
+                let param = new FormData();
+                param.append('file',this.file)
+                axios.post('/upload',param).then(res=>{
+                    if(res.status === 200){
+                        this.reData = res.data;
+                        console.log(this.reData)
+                    }
+                })
+            }
+        }
+    })
+</script>

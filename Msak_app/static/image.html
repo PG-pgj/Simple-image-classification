@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>获取图片</title>
+    <link rel="stylesheet" href="../static/lib/element.css">
+    <style>
+        #app{
+            padding: 0 300px;
+        }
+        .title{
+            display: flex;
+            padding: 10px 0 0;
+        }
+        .img-box{
+            flex: 2;
+        }
+        .img-tag{
+            flex: 2;
+        }
+        img{
+            width: 250px;
+            height: 250px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <el-button @click="getImage">获取图片</el-button>
+        <div v-for="(file,index) in imgData">
+<!--            {{file}}-->
+            <div class="title">
+                <div class="img-box">
+                    <img :src="file.path">
+                </div>
+                <div class="img-tag">
+                    <h1>图片名称: {{file.filename}}</h1>
+                    <h3>类别: {{file.classname}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="../static/lib/vue.min.js"></script>
+<script src="../static/lib/axios.min.js"></script>
+<script src="../static/lib/element.js"></script>
+<script>
+    var mv = new Vue({
+        el:'#app',
+        data:{
+            imgData:{}
+        },
+        methods:{
+            getImage(){
+                axios.get('/download',{}).then(res =>{
+                    if(res.status === 200){
+                        this.imgData = res.data;
+                        console.log(this.imgData)
+                    }else {}
+                }).catch(function (error){})
+            }
+        }
+    })
+</script>
