@@ -20,7 +20,7 @@ ALLOERD = {'jpg','jpeg','png','gif'}
 def index():
     return app.send_static_file('upload.html')
 
-model_path = 'model_119-07-0.10-0.97.hdf5'
+model_path = 'static/model_119-07-0.10-0.97.hdf5'
 model = load_model(model_path , compile=False)
 
 def allowerd_file(filename):
